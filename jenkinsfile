@@ -18,7 +18,8 @@ pipeline {
             steps {
                 script {
                     // Specify your custom Dockerfile
-                    sh "docker build -f CustomDockerfile -t $DOCKERHUB_USER/$IMAGE_NAME:latest ."
+                     sh "docker build -f Dockerfile -t $DOCKERHUB_USER/$IMAGE_NAME:latest ."
+
                 }
             }
         }
