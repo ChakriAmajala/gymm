@@ -1,10 +1,11 @@
+# Use official lightweight Nginx image
 FROM nginx:alpine
 
-WORKDIR /usr/share/nginx/html
-RUN rm -rf ./*
+# Copy website files into Nginx html directory
+COPY . /usr/share/nginx/html
 
-COPY . .
-COPY default.conf /etc/nginx/conf.d/default.conf
-
+# Expose port 80 for container
 EXPOSE 80
+
+# Start Nginx
 CMD ["nginx", "-g", "daemon off;"]
