@@ -1,0 +1,52 @@
+pipeline {
+    agent any
+
+    environment {
+        DOCKERHUB_USER = 'chakriamajaladocker'
+        IMAGE_NAME = 'gym-page'
+    }
+
+    stages {
+        stage('Clone Repository') {
+            steps {
+                git branch 'main', url : 'https://github.com/ChakriAmajala/gymm.git'
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    sh "docker build -t $DOCKERHUB_USER/$IMAGE_NAME:latest ."
+                }
+            }
+        }
+
+        stage('Login to DockerHub') {
+            steps {
+                script {
+                    withCredentials([usernamePassword(credentialsId: 'dockerhub-cred', usernameVariable: 'USER', passwordVariable: 'PASS')]) {
+                        sh "echo $PASS | docker login -u $USER --password-stdin"
+                    }
+                }
+            }
+        }
+
+        stage('Push Docker Image') {
+            steps {
+                script {
+                    sh "docker push $DOCKERHUB_USER/$IMAGE_NAME:latest"
+                }
+            }
+        }
+
+        stage('Deploy Container') {
+            steps {
+                script {
+                    sh "docker rm -f gym-page || true"
+                    sh "docker run -d --name gym-page -p 8004:8080 $DOCKERHUB_USER/$IMAGE_NAME:latest"
+                }
+            }
+        }
+    }
+}
+
