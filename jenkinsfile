@@ -4,6 +4,7 @@ pipeline {
     environment {
         DOCKERHUB_USER = 'chakriamajaladocker'
         IMAGE_NAME = 'gym-page'
+        PORT = "8004"
     }
 
     stages {
@@ -43,7 +44,7 @@ pipeline {
             steps {
                 script {
                     sh "docker rm -f gym-page || true"
-                    sh "docker run -d --name gym-page -p 8004:8080 $DOCKERHUB_USER/$IMAGE_NAME:latest"
+                    sh "docker run -d --name gym-page -p 8004:80 $DOCKERHUB_USER/$IMAGE_NAME:latest"
                 }
             }
         }
